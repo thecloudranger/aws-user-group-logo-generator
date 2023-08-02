@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://fonts.cdnfonts.com/css/amazon-ember" rel="stylesheet" />
+  </head>
+  <body>
+    <h1 align="center">AWS UG Logo generator</h1>
+    <div>
+      <h2>Instructions</h2>
+      <ol>
+        <li>
+          Upload your city logo with a transparent background using the upload
+          button.
+        </li>
+        <li>Add the city name in the text box.</li>
+        <li>
+          Rearrange and re-size the image and the text to the desired layout.
+        </li>
+        <li>Download the image using the download button.</li>
+        <li>Show-off your User Group logo to the world!</li>
+      </ol>
+    </div>
+
+    <div id="imageUploadDiv">
+      <p>Upload Image: <input type="file" id="imageUpload" /></p>
+    </div>
+
+    <div id="cityControls">
+      <p>City Name: <textarea id="cityName" rows="4" cols="50"></textarea></p>
+      <p>
+        Size: <input type="number" id="size3" min="1" max="100" value="30" />
+      </p>
+    </div>
+
+    <div id="downloadButtonDiv">
+      <button id="download">Download Image</button>
+    </div>
+
+    <div id="canvasDiv">
+      <canvas
+        id="canvas"
+        width="800"
+        height="400"
+        style="border: 1px solid #d3d3d3"
+      ></canvas>
+    </div>
+
+    <div id="deleteButtonDiv">
+      <button id="delete">Delete Selected Object</button>
+    </div>
+
+    <script src="http://unpkg.com/fabric/dist/fabric.min.js"></script>
+    <script>
+      var canvas = new fabric.Canvas("canvas");
+
+      var text1 = new fabric.IText("AWS", {
+        left: 300,
+        top: 100,
+        fontFamily: "Amazon Ember",
+        fontWeight: "bold",
+        fill: "#000000",
+      });
+      var text2 = new fabric.IText("User Group", {
+        left: 300,
+        top: 200,
+        fontFamily: "Amazon Ember",
+        fill: "#9968F6",
+      });
+      var text3 = new fabric.IText("City Name", {
+        left: 300,
+        top: 300,
+        fontFamily: "Amazon Ember",
+        fill: "#9968F6",
+      });
+      canvas.add(text1);
+      canvas.add(text2);
+      canvas.add(text3);
+
+      function updateText() {
+        text3.set({
+          text: document.getElementById("cityName").value,
+          fontSize: document.getElementById("size3").value,
+        });
+        canvas.renderAll();
+      }
+
+      document.getElementById("cityName").addEventListener("input", updateText);
+      document.getElementById("size3").addEventListener("input", updateText);
+
+      document
+        .getElementById("imageUpload")
+        .addEventListener("change", function (e) {
+          var reader = new FileReader();
+          reader.onload = function (event) {
+            var imgObj = new Image();
+            imgObj.src = event.target.result;
+            imgObj.onload = function () {
+              var img = new fabric.Image(imgObj);
+              img.scaleToWidth(350);
+              img.scaleToHeight(250);
+              canvas.add(img);
+            };
+          };
+          reader.readAsDataURL(e.target.files[0]);
+        });
+
+      document
+        .getElementById("download")
+        .addEventListener("click", function () {
+          var link = document.createElement("a");
+          var fileName =
+            "logo-" + document.getElementById("cityName").value + ".jpg";
+          link.download = fileName;
+          link.href = canvas
+            .toDataURL("image/jpeg")
+            .replace("image/jpeg", "image/octet-stream");
+          link.click();
+        });
+
+      document.getElementById("delete").addEventListener("click", function () {
+        var activeObject = canvas.getActiveObject();
+        if (activeObject) {
+          canvas.remove(activeObject);
+        }
+      });
+    </script>
+  </body>
+</html>
