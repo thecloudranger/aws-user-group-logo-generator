@@ -39,14 +39,10 @@
     <div id="canvasDiv">
       <canvas
         id="canvas"
-        width="800"
-        height="400"
+        width="750"
+        height="320"
         style="border: 1px solid #d3d3d3"
       ></canvas>
-    </div>
-
-    <div id="deleteButtonDiv">
-      <button id="delete">Delete Selected Object</button>
     </div>
 
     <script src="https://unpkg.com/fabric/dist/fabric.min.js"></script>
@@ -55,22 +51,26 @@
 
       var text1 = new fabric.IText("AWS", {
         left: 300,
-        top: 100,
+        top: 80,
         fontFamily: "Amazon Ember",
         fontWeight: "bold",
         fill: "#000000",
+        selectable: false,
       });
       var text2 = new fabric.IText("User Group", {
-        left: 300,
-        top: 200,
+        left: 295,
+        top: 110,
         fontFamily: "Amazon Ember",
         fill: "#9968F6",
+        fontSize: 80,
+        selectable: false,
       });
       var text3 = new fabric.IText("City Name", {
         left: 300,
-        top: 300,
+        top: 190,
         fontFamily: "Amazon Ember",
         fill: "#9968F6",
+        selectable: false,
       });
       canvas.add(text1);
       canvas.add(text2);
@@ -96,8 +96,9 @@
             imgObj.src = event.target.result;
             imgObj.onload = function () {
               var img = new fabric.Image(imgObj);
-              img.scaleToWidth(350);
-              img.scaleToHeight(250);
+              img.scaleToWidth(400);
+              img.scaleToHeight(300);
+              img.set({ left: 0, top: 5, selectable: false });
               canvas.add(img);
             };
           };
@@ -116,13 +117,6 @@
             .replace("image/jpeg", "image/octet-stream");
           link.click();
         });
-
-      document.getElementById("delete").addEventListener("click", function () {
-        var activeObject = canvas.getActiveObject();
-        if (activeObject) {
-          canvas.remove(activeObject);
-        }
-      });
     </script>
   </body>
 </html>
